@@ -43,11 +43,19 @@ class _HomePageState extends State<HomePage> {
 
   void nextQuestion(int length) {
     if (index < length - 1) {
-      setState(() {
-        index++;
-        isClicked = false;
-        isAlreadyAnswered = false;
-      });
+      if (isClicked) {
+        setState(() {
+          index++;
+          isClicked = false;
+          isAlreadyAnswered = false;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          duration: Duration(seconds: 1),
+          backgroundColor: Colors.grey,
+          content: Text('Please select an option'),
+        ));
+      }
     } else {
       showDialog(
           barrierDismissible: false,
@@ -174,12 +182,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 floatingActionButton: GestureDetector(
-                  onTap:()=>nextQuestion(extractedData.length),
+                  onTap: () => nextQuestion(extractedData.length),
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: NextButton(
-                      
-                    ),
+                    child: NextButton(),
                   ),
                 ),
                 floatingActionButtonLocation:
